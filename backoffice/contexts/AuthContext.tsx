@@ -13,7 +13,7 @@ interface User {
 
 interface AuthContextType {
     user: User | null;
-    login: (token: string, user: User) => void;
+    login: (token: string, user: User, redirectPath?: string) => void;
     logout: () => void;
     isLoading: boolean;
 }
@@ -48,10 +48,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         checkAuth();
     }, []);
 
-    const login = (token: string, userData: User) => {
+    const login = (token: string, userData: User, redirectPath: string = '/dashboard') => {
         Cookies.set('token', token, { expires: 365 }); // Set token cookie
         setUser(userData);
-        router.push('/dashboard');
+        router.push(redirectPath);
     };
 
     const logout = () => {

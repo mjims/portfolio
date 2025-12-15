@@ -18,10 +18,9 @@ export default function Sidebar() {
     const { logout, user } = useAuth();
 
     return (
-        <div className="w-64 bg-gray-900 text-white min-h-screen flex flex-col">
-            <div className="p-6 border-b border-gray-800">
-                <h1 className="text-2xl font-bold">Admin Panel</h1>
-                <p className="text-gray-400 text-sm mt-1">Welcome, {user?.name}</p>
+        <div className="w-64 bg-[#101828] text-foreground min-h-screen flex flex-col border-r border-custom">
+            <div className="p-4.5 border-b border-custom">
+                <h1 className="text-2xl font-bold text-white">Admin Panel</h1>
             </div>
             <nav className="flex-1 p-4 space-y-2">
                 {navItems.map((item) => {
@@ -32,8 +31,8 @@ export default function Sidebar() {
                             key={item.href}
                             href={item.href}
                             className={`flex items-center space-x-3 p-3 rounded transition-colors ${isActive
-                                    ? 'bg-blue-600 text-white'
-                                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                                ? 'bg-blue-600 text-white'
+                                : 'text-gray-300 hover:bg-gray-800 hover:text-white'
                                 }`}
                         >
                             <Icon size={20} />

@@ -52,27 +52,27 @@ export default function MessagesPage() {
                 <p>Loading messages...</p>
             ) : (
                 <div className="grid grid-cols-1 gap-6">
-                    {messages.length === 0 && <p>No messages found.</p>}
+                    {messages.length === 0 && <p className="text-secondary">No messages found.</p>}
                     {messages.map((msg) => (
-                        <div key={msg.id} className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+                        <div key={msg.id} className="bg-card rounded-lg shadow p-6 border border-custom">
                             <div className="flex justify-between items-start mb-4">
                                 <div>
-                                    <h2 className="text-xl font-bold dark:text-gray-200">{msg.subject || 'No Subject'}</h2>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    <h2 className="text-xl font-bold text-foreground">{msg.subject || 'No Subject'}</h2>
+                                    <p className="text-sm text-secondary">
                                         From: <span className="font-semibold">{msg.name}</span> ({msg.email})
                                     </p>
-                                    <p className="text-xs text-gray-400 mt-1">
+                                    <p className="text-xs text-secondary mt-1">
                                         {new Date(msg.created_at).toLocaleString()}
                                     </p>
                                 </div>
                                 <button
                                     onClick={() => handleDelete(msg.id)}
-                                    className="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 dark:hover:bg-red-900/20"
+                                    className="text-red-600 hover:text-red-900 p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
                                 >
                                     <Trash2 size={20} />
                                 </button>
                             </div>
-                            <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                            <div className="bg-page p-4 rounded text-foreground whitespace-pre-wrap border border-custom">
                                 {msg.message}
                             </div>
                         </div>

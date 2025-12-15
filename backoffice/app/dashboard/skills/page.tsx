@@ -92,20 +92,20 @@ export default function SkillsPage() {
             {isLoading ? (
                 <p>Loading skills...</p>
             ) : (
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden border border-gray-200 dark:border-gray-700">
+                <div className="bg-card rounded-lg shadow overflow-hidden border border-custom">
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead className="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Icon</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">Name</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">Type</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">Icon</th>
+                                <th className="px-6 py-3 text-right text-xs font-medium text-secondary uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        <tbody className="bg-card divide-y divide-gray-200 dark:divide-gray-700">
                             {skills.map((skill) => (
                                 <tr key={skill.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                    <td className="px-6 py-4 whitespace-nowrap font-medium dark:text-gray-100">{skill.name}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap font-medium text-foreground">{skill.name}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${skill.type === 'language' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
                                             skill.type === 'framework' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -113,7 +113,7 @@ export default function SkillsPage() {
                                             {skill.type}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-gray-400">{skill.icon}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-secondary">{skill.icon}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                         <button
                                             onClick={() => openEditModal(skill)}
@@ -136,61 +136,63 @@ export default function SkillsPage() {
             )}
 
             {/* Modal */}
-            {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-md p-6 border border-gray-200 dark:border-gray-700">
-                        <h2 className="text-xl font-bold mb-4 dark:text-white">{isEditing ? 'Edit Skill' : 'Add New Skill'}</h2>
-                        <form onSubmit={handleSubmit}>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Name</label>
-                                <input
-                                    type="text"
-                                    value={currentSkill.name || ''}
-                                    onChange={(e) => setCurrentSkill({ ...currentSkill, name: e.target.value })}
-                                    className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Type</label>
-                                <select
-                                    value={currentSkill.type || 'language'}
-                                    onChange={(e) => setCurrentSkill({ ...currentSkill, type: e.target.value })}
-                                    className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                >
-                                    <option value="language">Language</option>
-                                    <option value="framework">Framework</option>
-                                    <option value="tool">Tool</option>
-                                </select>
-                            </div>
-                            <div className="mb-6">
-                                <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Icon (Class or URL)</label>
-                                <input
-                                    type="text"
-                                    value={currentSkill.icon || ''}
-                                    onChange={(e) => setCurrentSkill({ ...currentSkill, icon: e.target.value })}
-                                    className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                />
-                            </div>
-                            <div className="flex justify-end space-x-2">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsModalOpen(false)}
-                                    className="px-4 py-2 border rounded text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                                >
-                                    Save
-                                </button>
-                            </div>
-                        </form>
+            {
+                isModalOpen && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+                        <div className="bg-card rounded-lg w-full max-w-md p-6 border border-custom">
+                            <h2 className="text-xl font-bold mb-4 text-foreground">{isEditing ? 'Edit Skill' : 'Add New Skill'}</h2>
+                            <form onSubmit={handleSubmit}>
+                                <div className="mb-4">
+                                    <label className="block text-secondary text-sm font-bold mb-2">Name</label>
+                                    <input
+                                        type="text"
+                                        value={currentSkill.name || ''}
+                                        onChange={(e) => setCurrentSkill({ ...currentSkill, name: e.target.value })}
+                                        className="w-full p-2 border border-custom rounded bg-page text-foreground"
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-secondary text-sm font-bold mb-2">Type</label>
+                                    <select
+                                        value={currentSkill.type || 'language'}
+                                        onChange={(e) => setCurrentSkill({ ...currentSkill, type: e.target.value })}
+                                        className="w-full p-2 border border-custom rounded bg-page text-foreground"
+                                    >
+                                        <option value="language">Language</option>
+                                        <option value="framework">Framework</option>
+                                        <option value="tool">Tool</option>
+                                    </select>
+                                </div>
+                                <div className="mb-6">
+                                    <label className="block text-secondary text-sm font-bold mb-2">Icon (Class or URL)</label>
+                                    <input
+                                        type="text"
+                                        value={currentSkill.icon || ''}
+                                        onChange={(e) => setCurrentSkill({ ...currentSkill, icon: e.target.value })}
+                                        className="w-full p-2 border border-custom rounded bg-page text-foreground"
+                                    />
+                                </div>
+                                <div className="flex justify-end space-x-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsModalOpen(false)}
+                                        className="px-4 py-2 border border-custom rounded text-secondary hover:bg-page"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }
