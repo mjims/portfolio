@@ -10,9 +10,12 @@ class ContactController extends Controller
     /**
      * Display a listing of the resource.
      */
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        //
+        return \App\Models\Contact::latest()->get();
     }
 
     /**
@@ -56,7 +59,7 @@ class ContactController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return \App\Models\Contact::findOrFail($id);
     }
 
     /**
@@ -64,7 +67,8 @@ class ContactController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Contacts are usually immutable, but we could implement update if needed.
+        // For now, let's leave it.
     }
 
     /**
@@ -72,6 +76,7 @@ class ContactController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        \App\Models\Contact::destroy($id);
+        return response()->noContent();
     }
 }

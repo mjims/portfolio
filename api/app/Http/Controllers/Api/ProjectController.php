@@ -71,7 +71,29 @@ class ProjectController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $project = \App\Models\Project::findOrFail($id);
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|unique:projects,slug,' . $id,
+            'description' => 'required|string',
+            'image' => 'nullable|image|max:2048',
+            'url' => 'nullable|url',
+            'github_url' => 'nullable|url',
+        ]);
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($project->image) {
+                $oldPath = str_replace('/storage/', '', $project->image);
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            }
+            $path = $request->file('image')->store('projects', 'public');
+            $validated['image'] = '/storage/' . $path;
+        }
+
+        $project->update($validated);
+        return $project;
     }
 
     /**
@@ -79,6 +101,12 @@ class ProjectController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $project = \App\Models\Project::findOrFail($id);
+        if ($project->image) {
+            $oldPath = str_replace('/storage/', '', $project->image);
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+        }
+        $project->delete();
+        return response()->noContent();
     }
 }

@@ -92,38 +92,38 @@ export default function SkillsPage() {
             {isLoading ? (
                 <p>Loading skills...</p>
             ) : (
-                <div className="bg-white rounded-lg shadow overflow-hidden">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden border border-gray-200 dark:border-gray-700">
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead className="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Icon</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Icon</th>
+                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             {skills.map((skill) => (
-                                <tr key={skill.id}>
-                                    <td className="px-6 py-4 whitespace-nowrap font-medium">{skill.name}</td>
+                                <tr key={skill.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                    <td className="px-6 py-4 whitespace-nowrap font-medium dark:text-gray-100">{skill.name}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${skill.type === 'language' ? 'bg-green-100 text-green-800' :
-                                                skill.type === 'framework' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'
+                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${skill.type === 'language' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                                            skill.type === 'framework' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                             }`}>
                                             {skill.type}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-gray-500">{skill.icon}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-gray-400">{skill.icon}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                         <button
                                             onClick={() => openEditModal(skill)}
-                                            className="text-indigo-600 hover:text-indigo-900"
+                                            className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
                                         >
                                             <Edit2 size={18} />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(skill.id)}
-                                            className="text-red-600 hover:text-red-900"
+                                            className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
                                         >
                                             <Trash2 size={18} />
                                         </button>
@@ -138,25 +138,25 @@ export default function SkillsPage() {
             {/* Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-lg w-full max-w-md p-6">
-                        <h2 className="text-xl font-bold mb-4">{isEditing ? 'Edit Skill' : 'Add New Skill'}</h2>
+                    <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-md p-6 border border-gray-200 dark:border-gray-700">
+                        <h2 className="text-xl font-bold mb-4 dark:text-white">{isEditing ? 'Edit Skill' : 'Add New Skill'}</h2>
                         <form onSubmit={handleSubmit}>
                             <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">Name</label>
+                                <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Name</label>
                                 <input
                                     type="text"
                                     value={currentSkill.name || ''}
                                     onChange={(e) => setCurrentSkill({ ...currentSkill, name: e.target.value })}
-                                    className="w-full p-2 border rounded"
+                                    className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                     required
                                 />
                             </div>
                             <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">Type</label>
+                                <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Type</label>
                                 <select
                                     value={currentSkill.type || 'language'}
                                     onChange={(e) => setCurrentSkill({ ...currentSkill, type: e.target.value })}
-                                    className="w-full p-2 border rounded"
+                                    className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                 >
                                     <option value="language">Language</option>
                                     <option value="framework">Framework</option>
@@ -164,19 +164,19 @@ export default function SkillsPage() {
                                 </select>
                             </div>
                             <div className="mb-6">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">Icon (Class or URL)</label>
+                                <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Icon (Class or URL)</label>
                                 <input
                                     type="text"
                                     value={currentSkill.icon || ''}
                                     onChange={(e) => setCurrentSkill({ ...currentSkill, icon: e.target.value })}
-                                    className="w-full p-2 border rounded"
+                                    className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                 />
                             </div>
                             <div className="flex justify-end space-x-2">
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100"
+                                    className="px-4 py-2 border rounded text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                                 >
                                     Cancel
                                 </button>
