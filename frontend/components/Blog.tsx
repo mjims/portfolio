@@ -9,6 +9,7 @@ import api from '@/lib/api';
 interface Post {
     id: number;
     title: string;
+    slug: string;
     excerpt: string;
     image: string;
     published_at: string;
@@ -93,7 +94,7 @@ export default function Blog() {
                             </p>
 
                             <Link
-                                href={`/blog/${post.id}`}
+                                href={`/blog/${post.slug}`}
                                 className="mt-auto inline-flex items-center gap-2 text-xs font-bold text-foreground uppercase tracking-widest hover:text-primary transition-colors"
                             >
                                 Lire la suite <ArrowRight size={14} />
