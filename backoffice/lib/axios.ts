@@ -2,12 +2,12 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const api = axios.create({
-    baseURL: 'http://localhost:8000/api', // Laravel API URL
+    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api',
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
     },
-    withCredentials: true, // Important for Sanctum cookie-based auth if on same domain, or for CORS
+    withCredentials: true,
 });
 
 api.interceptors.request.use((config) => {
