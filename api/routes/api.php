@@ -13,12 +13,28 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::get('/login', function () {
+    return response()->json(['message' => 'Unauthenticated.'], 401);
+})->name('login');
+
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::post('/upload', [\App\Http\Controllers\Api\UploadController::class, 'upload']);
     Route::post('/skills', [SkillController::class, 'store']);
     Route::put('/skills/{skill}', [SkillController::class, 'update']);
     Route::delete('/skills/{skill}', [SkillController::class, 'destroy']);
+
+    Route::post('/projects', [ProjectController::class, 'store']);
+    Route::put('/projects/{project}', [ProjectController::class, 'update']);
+    Route::delete('/projects/{project}', [ProjectController::class, 'destroy']);
+
+    Route::post('/posts', [PostController::class, 'store']);
+    Route::put('/posts/{post}', [PostController::class, 'update']);
+    Route::delete('/posts/{post}', [PostController::class, 'destroy']);
+
+    Route::get('/contacts', [ContactController::class, 'index']);
+    Route::delete('/contacts/{contact}', [ContactController::class, 'destroy']);
 
     // Todo: Add other secure routes here
 });

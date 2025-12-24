@@ -3,30 +3,25 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Post;
+use App\Services\PostService;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    /**
-    /**
-     * @OA\Get(
-     *      path="/api/posts",
-     *      operationId="getPostsList",
-     *      tags={"Posts"},
-     *      summary="Get list of blog posts",
-     *      description="Returns list of published blog posts",
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *       )
-     * )
-     */
-    public function index()
+    protected $postService;
+
+    public function __construct(PostService $postService)
     {
-        return \App\Models\Post::with('category')
-            ->where('is_published', true)
-            ->latest('published_at')
-            ->get();
+        $this->postService = $postService;
+    }
+
+    /**
+     * Get list of blog posts.
+     */
+    public function index(Request $request)
+    {
+        return $this->postService->getAll($request->has('all'));
     }
 
     /**
@@ -34,7 +29,17 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|unique:posts,slug',
+            'excerpt' => 'nullable|string',
+            'content' => 'required|string',
+            'category_id' => 'nullable|exists:categories,id',
+            'image' => 'nullable|string', // Expecting absolute URL now
+            'is_published' => 'boolean',
+        ]);
+
+        return $this->postService->create($validated);
     }
 
     /**
@@ -42,12 +47,7 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        return \App\Models\Post::with('category')
-            ->where('is_published', true)
-            ->where(function ($query) use ($id) {
-                $query->where('id', $id)->orWhere('slug', $id);
-            })
-            ->firstOrFail();
+        return $this->postService->getByIdOrSlug($id);
     }
 
     /**
@@ -55,7 +55,19 @@ class PostController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $post = Post::findOrFail($id);
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|unique:posts,slug,' . $id,
+            'excerpt' => 'nullable|string',
+            'content' => 'required|string',
+            'category_id' => 'nullable|exists:categories,id',
+            'image' => 'nullable|string', // Expecting absolute URL now
+            'is_published' => 'boolean',
+        ]);
+
+        return $this->postService->update($post, $validated);
     }
 
     /**
@@ -63,6 +75,9 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $this->postService->delete($post);
+        return response()->noContent();
     }
 }
+

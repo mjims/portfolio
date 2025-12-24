@@ -5,7 +5,8 @@ A dynamic portfolio and blog application built with a Laravel API backend and a 
 ## Project Structure
 
 - **api/**: Laravel application serving as the REST API.
-- **frontend/**: Next.js application for the user interface.
+- **frontend/**: Next.js application for the public portfolio and blog.
+- **backoffice/**: Next.js application for the admin dashboard.
 
 ## Features
 
@@ -53,6 +54,20 @@ A dynamic portfolio and blog application built with a Laravel API backend and a 
 1. Navigate to `frontend/`:
    ```bash
    cd frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run development server:
+   ```bash
+   npm run dev
+   ```
+
+### Backoffice
+1. Navigate to `backoffice/`:
+   ```bash
+   cd backoffice
    ```
 2. Install dependencies:
    ```bash
