@@ -47,7 +47,7 @@ export default function Contact() {
                                 </div>
                                 <div>
                                     <p className="text-xs text-secondary font-bold uppercase tracking-widest">Email</p>
-                                    <p className="text-foreground font-medium">hello@mjims.dev</p>
+                                    <p className="text-foreground font-medium">contact@mjimsdenla.online</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
@@ -56,7 +56,7 @@ export default function Contact() {
                                 </div>
                                 <div>
                                     <p className="text-xs text-secondary font-bold uppercase tracking-widest">Téléphone</p>
-                                    <p className="text-foreground font-medium">+1 (234) 567-890</p>
+                                    <p className="text-foreground font-medium">(+229) 0167 697 667</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
@@ -65,7 +65,7 @@ export default function Contact() {
                                 </div>
                                 <div>
                                     <p className="text-xs text-secondary font-bold uppercase tracking-widest">Localisation</p>
-                                    <p className="text-foreground font-medium">San Francisco, CA</p>
+                                    <p className="text-foreground font-medium">Cotonou, Bénin</p>
                                 </div>
                             </div>
                         </div>

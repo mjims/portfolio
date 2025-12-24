@@ -17,8 +17,8 @@ export default function Hero() {
                     className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/5 border border-primary/20 mb-8"
                 >
                     <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#35b03f] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#35b03f]"></span>
                     </span>
                     <span className="text-xs font-bold text-primary uppercase tracking-widest">Disponible pour freelance</span>
                 </motion.div>

@@ -51,14 +51,14 @@ export default function Skills() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 bg-white rounded-xl overflow-hidden border border-border shadow-soft">
                     {/* Languages & Frameworks */}
                     <div className="p-8 flex flex-col items-center text-center border-b lg:border-b-0 lg:border-r border-border hover:bg-black/[0.01] transition-colors">
-                        <div className="w-16 h-16 bg-foreground text-background rounded-xl flex items-center justify-center mb-8 shadow-lg">
+                        <div className="w-16 h-16 bg-white border border-border rounded-full flex items-center justify-center mb-8 shadow-sm">
                             <Code2 size={32} />
                         </div>
                         <h3 className="text-sm font-bold text-foreground uppercase tracking-[0.2em] mb-6">
                             LANGUAGES ET FRAMEWORKS
                         </h3>
                         <p className="text-secondary text-sm mb-6">
-                            Maîtrise de plusieurs langages et frameworks
+                            Maîtrise de plusieurs langages et frameworks modernes
                         </p>
 
                         <div className="w-full mb-6">
@@ -74,7 +74,7 @@ export default function Skills() {
 
                         <div className="w-full pt-6 border-t border-border/50">
                             <p className="text-xs font-bold text-primary uppercase tracking-widest mb-3 opacity-70">Frameworks</p>
-                            <ul className="text-foreground font-medium space-y-2 text-sm">
+                            <ul className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-foreground font-medium text-sm">
                                 {frameworks.map(s => (
                                     <li key={s.id}>{s.name}</li>
                                 ))}

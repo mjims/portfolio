@@ -44,7 +44,7 @@ export default function Blog() {
                     <div>
                         <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">Dernières Actualités<span className="text-primary">.</span></h2>
                         <p className="text-secondary max-w-lg">
-                            Réflexions, tutoriels et partages d'expériences sur la technologie, le design et le développement web.
+                            Réflexions, tutoriels et partages d'expériences sur la technologie, le design et le développement d'applications.
                         </p>
                     </div>
                     <Link href="/blog" className="text-primary font-bold flex items-center gap-2 hover:opacity-80 transition-opacity pb-2">
@@ -60,7 +60,7 @@ export default function Blog() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
-                            className="group flex flex-col"
+                            className="group flex flex-col border border-1 border-[#ccc] rounded-xl overflow-hidden pb-4"
                         >
                             <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-6 border border-border bg-white shadow-sm transition-shadow group-hover:shadow-md">
                                 <img
@@ -75,7 +75,7 @@ export default function Blog() {
                                 )}
                             </div>
 
-                            <div className="flex items-center gap-4 text-xs text-secondary mb-4">
+                            <div className="flex items-center gap-4 text-xs text-secondary mb-4 mx-4">
                                 <div className="flex items-center gap-1.5">
                                     <Calendar size={14} />
                                     {new Date(post.published_at).toLocaleDateString('fr-FR', { month: 'short', day: 'numeric', year: 'numeric' })}
@@ -86,16 +86,16 @@ export default function Blog() {
                                 </div>
                             </div>
 
-                            <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors leading-snug">
+                            <h3 className="text-xl font-bold text-foreground mb-3 mx-4 group-hover:text-primary transition-colors leading-snug">
                                 {post.title}
                             </h3>
-                            <p className="text-secondary text-sm leading-relaxed mb-6 line-clamp-2">
+                            <p className="text-secondary text-sm leading-relaxed mb-6 mx-4 line-clamp-2">
                                 {post.excerpt}
                             </p>
 
                             <Link
                                 href={`/blog/${post.slug}`}
-                                className="mt-auto inline-flex items-center gap-2 text-xs font-bold text-foreground uppercase tracking-widest hover:text-primary transition-colors"
+                                className="mt-auto mx-4 inline-flex items-center gap-2 text-xs font-bold text-foreground uppercase tracking-widest hover:text-primary transition-colors"
                             >
                                 Lire la suite <ArrowRight size={14} />
                             </Link>
