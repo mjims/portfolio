@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from 'lucide-react';
 import api from '@/lib/api';
 
