@@ -33,6 +33,7 @@ class ProjectController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'required|string|unique:projects,slug',
             'description' => 'required|string',
+            'languages' => 'nullable|string',
             'image' => 'nullable|string', // Absolute URL
             'url' => 'nullable|url',
             'github_url' => 'nullable|url',
@@ -60,6 +61,7 @@ class ProjectController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'required|string|unique:projects,slug,' . $id,
             'description' => 'required|string',
+            'languages' => 'nullable|string',
             'image' => 'nullable|string', // Absolute URL
             'url' => 'nullable|url',
             'github_url' => 'nullable|url',

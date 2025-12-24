@@ -108,7 +108,10 @@ export default function SkillsPage() {
                                     <td className="px-6 py-4 whitespace-nowrap font-medium text-foreground">{skill.name}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${skill.type === 'language' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                                            skill.type === 'framework' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                                            skill.type === 'framework' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' :
+                                                skill.type === 'cms' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :
+                                                    skill.type === 'database' ? 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200' :
+                                                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                                             }`}>
                                             {skill.type}
                                         </span>
@@ -161,6 +164,8 @@ export default function SkillsPage() {
                                     >
                                         <option value="language">Language</option>
                                         <option value="framework">Framework</option>
+                                        <option value="cms">CMS</option>
+                                        <option value="database">Database</option>
                                         <option value="tool">Tool</option>
                                     </select>
                                 </div>

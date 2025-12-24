@@ -10,5 +10,5 @@ class Project extends Model
     /** @use HasFactory<\Database\Factories\ProjectFactory> */
     use HasFactory;
 
-    protected $fillable = ['title', 'slug', 'description', 'image', 'url', 'github_url'];
+    protected $fillable = ['title', 'slug', 'description', 'languages', 'image', 'url', 'github_url'];
 }

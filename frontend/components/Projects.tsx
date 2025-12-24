@@ -13,7 +13,7 @@ interface Project {
     image: string;
     demo_url?: string;
     github_url?: string;
-    tags?: string;
+    languages?: string;
 }
 
 export default function Projects() {
@@ -73,7 +73,7 @@ export default function Projects() {
                                 </p>
 
                                 <div className="flex flex-wrap gap-2 mb-6">
-                                    {project.tags?.split(',').map(tag => (
+                                    {project.languages?.split(',').map((tag: string) => (
                                         <span key={tag} className="text-[10px] font-bold text-primary uppercase tracking-widest bg-primary/5 px-2.5 py-1 rounded-md border border-primary/10">
                                             {tag.trim()}
                                         </span>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { projectService, Project, CreateProjectData } from '@/services/projectService';
 import { uploadService } from '@/services/uploadService';
-import { Plus, Trash2, Edit2, Link as LinkIcon, Github } from 'lucide-react';
+import { Plus, Trash2, Edit2, Link as LinkIcon, Github, X } from 'lucide-react';
 
 export default function ProjectsPage() {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -15,6 +15,7 @@ export default function ProjectsPage() {
     const [isEditing, setIsEditing] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [languageInput, setLanguageInput] = useState('');
 
     const fetchProjects = async () => {
         try {
@@ -53,6 +54,23 @@ export default function ProjectsPage() {
         setIsModalOpen(true);
     };
 
+    const handleLanguageKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' || e.key === ',') {
+            e.preventDefault();
+            const tag = languageInput.trim().replace(',', '');
+            if (tag && !formData.languages?.split(',').includes(tag)) {
+                const currentLanguages = formData.languages ? formData.languages.split(',').filter(Boolean) : [];
+                setFormData({ ...formData, languages: [...currentLanguages, tag].join(',') });
+                setLanguageInput('');
+            }
+        }
+    };
+
+    const removeLanguage = (tag: string) => {
+        const currentLanguages = formData.languages ? formData.languages.split(',').filter(Boolean) : [];
+        setFormData({ ...formData, languages: currentLanguages.filter(l => l !== tag).join(',') });
+    };
+
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -77,6 +95,7 @@ export default function ProjectsPage() {
             title: formData.title || '',
             slug: formData.slug || '',
             description: formData.description || '',
+            languages: formData.languages || '',
             image: formData.image || null,
             url: formData.url || null,
             github_url: formData.github_url || null,
@@ -195,6 +214,28 @@ export default function ProjectsPage() {
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     className="w-full p-2 border border-custom rounded h-32 bg-page text-foreground"
                                     required
+                                />
+                            </div>
+
+                            <div className="mb-4">
+                                <label className="block text-secondary text-sm font-bold mb-2">Languages / Stack (Press Enter, Comma or Space to add)</label>
+                                <div className="flex flex-wrap gap-2 mb-2">
+                                    {formData.languages?.split(',').filter(Boolean).map((lang) => (
+                                        <span key={lang} className="bg-primary/10 text-primary px-2 py-1 rounded-md text-sm flex items-center gap-1">
+                                            {lang}
+                                            <button type="button" onClick={() => removeLanguage(lang)} className="hover:text-red-500">
+                                                <X size={14} />
+                                            </button>
+                                        </span>
+                                    ))}
+                                </div>
+                                <input
+                                    type="text"
+                                    value={languageInput}
+                                    onChange={(e) => setLanguageInput(e.target.value)}
+                                    onKeyDown={handleLanguageKeyDown}
+                                    placeholder="Add a language..."
+                                    className="w-full p-2 border border-custom rounded bg-page text-foreground"
                                 />
                             </div>
 

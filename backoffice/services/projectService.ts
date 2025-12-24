@@ -5,6 +5,7 @@ export interface Project {
     title: string;
     slug: string;
     description: string;
+    languages: string | null;
     image: string | null;
     url: string | null;
     github_url: string | null;
