@@ -20,6 +20,7 @@ Route::get('/login', function () {
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::post('/upload', [\App\Http\Controllers\Api\UploadController::class, 'upload']);
     Route::post('/skills', [SkillController::class, 'store']);
     Route::put('/skills/{skill}', [SkillController::class, 'update']);
     Route::delete('/skills/{skill}', [SkillController::class, 'destroy']);

@@ -2,28 +2,29 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import api from '@/lib/axios';
 import PostForm from '@/components/PostForm';
+import { postService, Post, CreatePostData } from '@/services/postService';
+import { categoryService, Category } from '@/services/categoryService';
 
 export default function EditPostPage() {
     const router = useRouter();
     const params = useParams(); // { id: string }
-    const id = params.id;
+    const id = params.id as string;
 
-    const [post, setPost] = useState(null);
-    const [categories, setCategories] = useState([]);
+    const [post, setPost] = useState<Post | null>(null);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isFetching, setIsFetching] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [postRes, catRes] = await Promise.all([
-                    api.get(`/posts/${id}`),
-                    api.get('/categories')
+                const [postData, categoriesData] = await Promise.all([
+                    postService.getById(id),
+                    categoryService.getAll()
                 ]);
-                setPost(postRes.data);
-                setCategories(catRes.data);
+                setPost(postData);
+                setCategories(categoriesData);
             } catch (error) {
                 console.error('Failed to fetch data', error);
                 alert('Failed to load post data');
@@ -35,13 +36,10 @@ export default function EditPostPage() {
         if (id) fetchData();
     }, [id, router]);
 
-    const handleSubmit = async (formData: FormData) => {
+    const handleSubmit = async (data: CreatePostData) => {
         setIsLoading(true);
-        formData.append('_method', 'PUT'); // Laravel pseudo-method
         try {
-            await api.post(`/posts/${id}`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            await postService.update(id, data);
             router.push('/dashboard/posts');
         } catch (error) {
             console.error('Failed to update post', error);
@@ -67,3 +65,4 @@ export default function EditPostPage() {
         </div>
     );
 }
+

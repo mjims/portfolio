@@ -1,32 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import 'react-quill-new/dist/quill.snow.css'; // Import styles
+import { uploadService } from '@/services/uploadService';
+import { Post, CreatePostData } from '@/services/postService';
+import { Category } from '@/services/categoryService';
+import 'react-quill-new/dist/quill.snow.css';
 
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
-
-interface Category {
-    id: number;
-    name: string;
-}
-
-interface Post {
-    id?: number;
-    title: string;
-    slug: string;
-    excerpt: string;
-    content: string;
-    image: string | null;
-    is_published: boolean;
-    category_id: number | null;
-}
 
 interface PostFormProps {
     initialData?: Partial<Post>;
     categories: Category[];
-    onSubmit: (formData: FormData) => Promise<void>;
+    onSubmit: (data: CreatePostData) => Promise<void>;
     isLoading?: boolean;
     isEditing?: boolean;
 }
@@ -39,21 +26,39 @@ export default function PostForm({ initialData = {}, categories, onSubmit, isLoa
     const [content, setContent] = useState(initialData.content || '');
     const [categoryId, setCategoryId] = useState<number | string>(initialData.category_id || '');
     const [isPublished, setIsPublished] = useState(initialData.is_published || false);
-    const [imageFile, setImageFile] = useState<File | null>(null);
-    const [currentImage, setCurrentImage] = useState<string | null>(initialData.image || null);
+    const [imageUrl, setImageUrl] = useState<string | null>(initialData.image || null);
+    const [isUploading, setIsUploading] = useState(false);
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setIsUploading(true);
+        try {
+            const url = await uploadService.upload(file, 'posts');
+            setImageUrl(url);
+        } catch (error) {
+            console.error('Upload failed', error);
+            alert('Image upload failed');
+        } finally {
+            setIsUploading(false);
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append('title', title);
-        formData.append('slug', slug);
-        formData.append('excerpt', excerpt);
-        formData.append('content', content);
-        formData.append('is_published', isPublished ? '1' : '0');
-        if (categoryId) formData.append('category_id', String(categoryId));
-        if (imageFile) formData.append('image', imageFile);
 
-        await onSubmit(formData);
+        const data: CreatePostData = {
+            title,
+            slug,
+            excerpt,
+            content,
+            is_published: isPublished,
+            category_id: categoryId ? Number(categoryId) : null,
+            image: imageUrl,
+        };
+
+        await onSubmit(data);
     };
 
     return (
@@ -86,7 +91,7 @@ export default function PostForm({ initialData = {}, categories, onSubmit, isLoa
                     <label className="block text-secondary text-sm font-bold mb-2">Category</label>
                     <select
                         value={categoryId}
-                        onChange={(e) => setCategoryId(Number(e.target.value))}
+                        onChange={(e) => setCategoryId(e.target.value)}
                         className="w-full p-2 border border-custom rounded bg-page text-foreground"
                     >
                         <option value="">Select Category</option>
@@ -128,12 +133,17 @@ export default function PostForm({ initialData = {}, categories, onSubmit, isLoa
                 <label className="block text-secondary text-sm font-bold mb-2">Image</label>
                 <input
                     type="file"
-                    onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
+                    onChange={handleImageUpload}
                     className="w-full text-secondary"
                     accept="image/*"
+                    disabled={isUploading}
                 />
-                {currentImage && !imageFile && (
-                    <p className="text-xs text-secondary mt-1">Current: {currentImage}</p>
+                {isUploading && <p className="text-sm text-blue-500 mt-1">Uploading...</p>}
+                {imageUrl && (
+                    <div className="mt-2">
+                        <img src={imageUrl} alt="Preview" className="h-32 rounded border border-custom" />
+                        <p className="text-[10px] text-secondary mt-1 truncate max-w-xs">{imageUrl}</p>
+                    </div>
                 )}
             </div>
 
@@ -147,7 +157,7 @@ export default function PostForm({ initialData = {}, categories, onSubmit, isLoa
                 </button>
                 <button
                     type="submit"
-                    disabled={isLoading}
+                    disabled={isLoading || isUploading}
                     className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
                 >
                     {isLoading ? 'Saving...' : isEditing ? 'Update Post' : 'Create Post'}
@@ -156,3 +166,4 @@ export default function PostForm({ initialData = {}, categories, onSubmit, isLoa
         </form>
     );
 }
+

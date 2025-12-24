@@ -2,19 +2,20 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import api from '@/lib/axios';
 import PostForm from '@/components/PostForm';
+import { postService, CreatePostData } from '@/services/postService';
+import { categoryService, Category } from '@/services/categoryService';
 
 export default function NewPostPage() {
     const router = useRouter();
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await api.get('/categories');
-                setCategories(response.data);
+                const data = await categoryService.getAll();
+                setCategories(data);
             } catch (error) {
                 console.error('Failed to fetch categories', error);
             }
@@ -22,12 +23,10 @@ export default function NewPostPage() {
         fetchCategories();
     }, []);
 
-    const handleSubmit = async (formData: FormData) => {
+    const handleSubmit = async (data: CreatePostData) => {
         setIsLoading(true);
         try {
-            await api.post('/posts', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            await postService.create(data);
             router.push('/dashboard/posts');
         } catch (error) {
             console.error('Failed to create post', error);
@@ -44,3 +43,4 @@ export default function NewPostPage() {
         </div>
     );
 }
+

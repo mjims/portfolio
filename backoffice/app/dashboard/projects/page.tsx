@@ -1,19 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import api from '@/lib/axios';
+import { projectService, Project, CreateProjectData } from '@/services/projectService';
+import { uploadService } from '@/services/uploadService';
 import { Plus, Trash2, Edit2, Link as LinkIcon, Github } from 'lucide-react';
-import Link from 'next/link';
-
-interface Project {
-    id: number;
-    title: string;
-    slug: string;
-    description: string;
-    image: string;
-    url: string;
-    github_url: string;
-}
 
 export default function ProjectsPage() {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -21,14 +11,15 @@ export default function ProjectsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Form State
-    const [currentProject, setCurrentProject] = useState<Partial<Project>>({});
-    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [formData, setFormData] = useState<Partial<Project>>({});
     const [isEditing, setIsEditing] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     const fetchProjects = async () => {
         try {
-            const response = await api.get('/projects');
-            setProjects(response.data);
+            const data = await projectService.getAll();
+            setProjects(data);
         } catch (error) {
             console.error('Failed to fetch projects', error);
         } finally {
@@ -43,7 +34,7 @@ export default function ProjectsPage() {
     const handleDelete = async (id: number) => {
         if (!confirm('Are you sure you want to delete this project?')) return;
         try {
-            await api.delete(`/projects/${id}`);
+            await projectService.delete(id);
             fetchProjects();
         } catch (error) {
             console.error('Failed to delete', error);
@@ -51,53 +42,59 @@ export default function ProjectsPage() {
     };
 
     const openCreateModal = () => {
-        setCurrentProject({});
-        setImageFile(null);
+        setFormData({});
         setIsEditing(false);
         setIsModalOpen(true);
     };
 
     const openEditModal = (project: Project) => {
-        setCurrentProject(project);
-        setImageFile(null); // Reset file input, keep existing image in currentProject.image
+        setFormData(project);
         setIsEditing(true);
         setIsModalOpen(true);
     };
 
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setIsUploading(true);
+        try {
+            const url = await uploadService.upload(file, 'projects');
+            setFormData({ ...formData, image: url });
+        } catch (error) {
+            console.error('Upload failed', error);
+            alert('Image upload failed');
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsSaving(true);
 
-        const formData = new FormData();
-        formData.append('title', currentProject.title || '');
-        formData.append('slug', currentProject.slug || '');
-        formData.append('description', currentProject.description || '');
-        formData.append('url', currentProject.url || '');
-        formData.append('github_url', currentProject.github_url || '');
-
-        if (imageFile) {
-            formData.append('image', imageFile);
-        }
-
-        // Must use _method=PUT for Laravel file uploads on update because of PHP limitation with PUT requests and multipart/form-data
-        if (isEditing && currentProject.id) {
-            formData.append('_method', 'PUT');
-        }
+        const data: CreateProjectData = {
+            title: formData.title || '',
+            slug: formData.slug || '',
+            description: formData.description || '',
+            image: formData.image || null,
+            url: formData.url || null,
+            github_url: formData.github_url || null,
+        };
 
         try {
-            const config = {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            };
-
-            if (isEditing && currentProject.id) {
-                await api.post(`/projects/${currentProject.id}`, formData, config);
+            if (isEditing && formData.id) {
+                await projectService.update(formData.id, data);
             } else {
-                await api.post('/projects', formData, config);
+                await projectService.create(data);
             }
             setIsModalOpen(false);
             fetchProjects();
         } catch (error) {
             console.error('Submit failed', error);
             alert('Failed to save project.');
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -164,8 +161,8 @@ export default function ProjectsPage() {
 
             {/* Modal */}
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 overflow-y-auto">
-                    <div className="bg-card rounded-lg w-full max-w-2xl p-6 m-4 border border-custom">
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 overflow-y-auto z-50">
+                    <div className="bg-card rounded-lg w-full max-w-2xl p-6 m-4 border border-custom shadow-2xl">
                         <h2 className="text-xl font-bold mb-4 text-foreground">{isEditing ? 'Edit Project' : 'Add New Project'}</h2>
                         <form onSubmit={handleSubmit}>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -173,8 +170,8 @@ export default function ProjectsPage() {
                                     <label className="block text-secondary text-sm font-bold mb-2">Title</label>
                                     <input
                                         type="text"
-                                        value={currentProject.title || ''}
-                                        onChange={(e) => setCurrentProject({ ...currentProject, title: e.target.value })}
+                                        value={formData.title || ''}
+                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                         className="w-full p-2 border border-custom rounded bg-page text-foreground"
                                         required
                                     />
@@ -183,8 +180,8 @@ export default function ProjectsPage() {
                                     <label className="block text-secondary text-sm font-bold mb-2">Slug</label>
                                     <input
                                         type="text"
-                                        value={currentProject.slug || ''}
-                                        onChange={(e) => setCurrentProject({ ...currentProject, slug: e.target.value })}
+                                        value={formData.slug || ''}
+                                        onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                                         className="w-full p-2 border border-custom rounded bg-page text-foreground"
                                         required
                                     />
@@ -194,8 +191,8 @@ export default function ProjectsPage() {
                             <div className="mb-4">
                                 <label className="block text-secondary text-sm font-bold mb-2">Description</label>
                                 <textarea
-                                    value={currentProject.description || ''}
-                                    onChange={(e) => setCurrentProject({ ...currentProject, description: e.target.value })}
+                                    value={formData.description || ''}
+                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     className="w-full p-2 border border-custom rounded h-32 bg-page text-foreground"
                                     required
                                 />
@@ -206,8 +203,8 @@ export default function ProjectsPage() {
                                     <label className="block text-secondary text-sm font-bold mb-2">Live URL</label>
                                     <input
                                         type="url"
-                                        value={currentProject.url || ''}
-                                        onChange={(e) => setCurrentProject({ ...currentProject, url: e.target.value })}
+                                        value={formData.url || ''}
+                                        onChange={(e) => setFormData({ ...formData, url: e.target.value })}
                                         className="w-full p-2 border border-custom rounded bg-page text-foreground"
                                     />
                                 </div>
@@ -215,8 +212,8 @@ export default function ProjectsPage() {
                                     <label className="block text-secondary text-sm font-bold mb-2">Github URL</label>
                                     <input
                                         type="url"
-                                        value={currentProject.github_url || ''}
-                                        onChange={(e) => setCurrentProject({ ...currentProject, github_url: e.target.value })}
+                                        value={formData.github_url || ''}
+                                        onChange={(e) => setFormData({ ...formData, github_url: e.target.value })}
                                         className="w-full p-2 border border-custom rounded bg-page text-foreground"
                                     />
                                 </div>
@@ -226,11 +223,18 @@ export default function ProjectsPage() {
                                 <label className="block text-secondary text-sm font-bold mb-2">Image</label>
                                 <input
                                     type="file"
-                                    onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
+                                    onChange={handleImageUpload}
                                     className="w-full text-secondary"
                                     accept="image/*"
+                                    disabled={isUploading}
                                 />
-                                {currentProject.image && <p className="text-xs text-secondary mt-1">Current: {currentProject.image}</p>}
+                                {isUploading && <p className="text-sm text-blue-500 mt-1">Uploading...</p>}
+                                {formData.image && (
+                                    <div className="mt-2 text-center">
+                                        <img src={formData.image} alt="Preview" className="h-40 mx-auto rounded border border-custom shadow shadow-black/50" />
+                                        <p className="text-[10px] text-secondary mt-1 truncate">{formData.image}</p>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="flex justify-end space-x-2">
@@ -243,9 +247,10 @@ export default function ProjectsPage() {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                    disabled={isSaving || isUploading}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
                                 >
-                                    Save
+                                    {isSaving ? 'Saving...' : 'Save'}
                                 </button>
                             </div>
                         </form>
@@ -255,3 +260,4 @@ export default function ProjectsPage() {
         </div>
     );
 }
+

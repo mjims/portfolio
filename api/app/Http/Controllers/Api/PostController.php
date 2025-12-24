@@ -3,35 +3,25 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Post;
+use App\Services\PostService;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    protected $postService;
+
+    public function __construct(PostService $postService)
+    {
+        $this->postService = $postService;
+    }
+
     /**
-    /**
-     * @OA\Get(
-     *      path="/api/posts",
-     *      operationId="getPostsList",
-     *      tags={"Posts"},
-     *      summary="Get list of blog posts",
-     *      description="Returns list of published blog posts",
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *       )
-     * )
+     * Get list of blog posts.
      */
     public function index(Request $request)
     {
-        // If query param 'all' is present (admin), return all
-        if ($request->has('all')) {
-            return \App\Models\Post::with('category')->latest()->get();
-        }
-
-        return \App\Models\Post::with('category')
-            ->where('is_published', true)
-            ->latest('published_at')
-            ->get();
+        return $this->postService->getAll($request->has('all'));
     }
 
     /**
@@ -45,20 +35,11 @@ class PostController extends Controller
             'excerpt' => 'nullable|string',
             'content' => 'required|string',
             'category_id' => 'nullable|exists:categories,id',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|string', // Expecting absolute URL now
             'is_published' => 'boolean',
         ]);
 
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('posts', 'public');
-            $validated['image'] = '/storage/' . $path;
-        }
-
-        if (isset($validated['is_published']) && $validated['is_published'] && !isset($validated['published_at'])) {
-            $validated['published_at'] = now();
-        }
-
-        return \App\Models\Post::create($validated);
+        return $this->postService->create($validated);
     }
 
     /**
@@ -66,21 +47,7 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        // Allow admin to see unpublished posts via separate route? Or just use this.
-        // For public API, we might want to filter is_published.
-        // For Backoffice, we want to see everything.
-        // BUT this endpoint is used by public frontend too.
-        // For simplicity, let's allow finding by ID for editing (which uses ID), and keep slug for public which filters published.
-
-        $query = \App\Models\Post::with('category');
-
-        if (is_numeric($id)) {
-            return $query->findOrFail($id);
-        }
-
-        return $query->where('is_published', true)
-            ->where('slug', $id)
-            ->firstOrFail();
+        return $this->postService->getByIdOrSlug($id);
     }
 
     /**
@@ -88,7 +55,7 @@ class PostController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $post = \App\Models\Post::findOrFail($id);
+        $post = Post::findOrFail($id);
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -96,25 +63,11 @@ class PostController extends Controller
             'excerpt' => 'nullable|string',
             'content' => 'required|string',
             'category_id' => 'nullable|exists:categories,id',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|string', // Expecting absolute URL now
             'is_published' => 'boolean',
         ]);
 
-        if ($request->hasFile('image')) {
-            if ($post->image) {
-                $oldPath = str_replace('/storage/', '', $post->image);
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
-            }
-            $path = $request->file('image')->store('posts', 'public');
-            $validated['image'] = '/storage/' . $path;
-        }
-
-        if (isset($validated['is_published']) && $validated['is_published'] && !$post->published_at) {
-            $validated['published_at'] = now();
-        }
-
-        $post->update($validated);
-        return $post;
+        return $this->postService->update($post, $validated);
     }
 
     /**
@@ -122,12 +75,9 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        $post = \App\Models\Post::findOrFail($id);
-        if ($post->image) {
-            $oldPath = str_replace('/storage/', '', $post->image);
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
-        }
-        $post->delete();
+        $post = Post::findOrFail($id);
+        $this->postService->delete($post);
         return response()->noContent();
     }
 }
+
