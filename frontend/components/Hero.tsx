@@ -5,45 +5,62 @@ import { ArrowRight } from 'lucide-react';
 
 export default function Hero() {
     return (
-        <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-white" style={{ boxShadow: '0px 0px 16px 16px #fff' }}>
             {/* Background Decorative Elements */}
-            <div className="absolute top-1/4 -left-20 w-72 h-72 bg-primary/20 rounded-full blur-3xl" />
-            <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-accent/20 rounded-full blur-3xl" />
+            <div className="absolute top-1/4 -left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl opacity-60" />
+            <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-accent/10 rounded-full blur-3xl opacity-60" />
 
             <div className="section-padding relative z-10 text-center">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
+                    className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/5 border border-primary/20 mb-8"
                 >
-                    <span className="inline-block glass px-4 py-1.5 rounded-full text-xs font-bold text-primary mb-6 ring-1 ring-white/10 uppercase tracking-widest">
-                        Available for freelance
+                    <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                     </span>
+                    <span className="text-xs font-bold text-primary uppercase tracking-widest">Disponible pour freelance</span>
+                </motion.div>
 
-                    <h1 className="text-5xl md:text-8xl font-display font-bold mb-8 leading-[1.1] tracking-tighter">
-                        Crafting <span className="text-gradient">Premium</span> <br />
-                        Digital Experiences.
-                    </h1>
+                <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="text-6xl md:text-8xl font-display font-bold text-foreground leading-tight mb-8"
+                >
+                    Développeur <br />
+                    <span className="text-gradient">Full Stack</span>
+                </motion.h1>
 
-                    <p className="max-w-xl mx-auto text-lg md:text-xl text-secondary mb-12 leading-relaxed">
-                        I'm a full-stack developer dedicated to building high-performance
-                        web applications with state-of-the-art aesthetics.
-                    </p>
+                <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-secondary text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed"
+                >
+                    Je conçois et développe des expériences numériques d'exception, alliant design moderne et technologies de pointe pour donner vie à vos idées.
+                </motion.p>
 
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <a
-                            href="#projects"
-                            className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-bold rounded-2xl hover:bg-blue-600 transition-all hover:scale-105"
-                        >
-                            View Projects
-                        </a>
-                        <a
-                            href="#contact"
-                            className="w-full sm:w-auto px-8 py-4 glass rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-white/10 transition-all"
-                        >
-                            Get in touch <ArrowRight size={18} />
-                        </a>
-                    </div>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="flex flex-col md:flex-row items-center justify-center gap-6"
+                >
+                    <button
+                        onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+                        className="group bg-primary text-white px-8 py-4 rounded-full font-bold text-lg flex items-center gap-2 hover:bg-blue-600 transition-all shadow-lg shadow-primary/25"
+                    >
+                        Voir mes projets
+                        <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    </button>
+                    <button
+                        onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                        className="px-8 py-4 rounded-full font-bold text-lg text-foreground bg-background-alt/50 border border-border hover:bg-background-alt transition-all"
+                    >
+                        Démarrons un projet
+                    </button>
                 </motion.div>
             </div>
         </section>

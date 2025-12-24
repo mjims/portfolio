@@ -5,12 +5,12 @@ import { Github, Twitter, Linkedin, Mail } from 'lucide-react';
 
 export default function Footer() {
     return (
-        <footer className="border-t border-border bg-background py-12 px-6">
+        <footer className="border-t border-border py-12 px-6 relative bg-[#ebebeb]" style={{ boxShadow: '0px 0px 16px 16px #ebebeb' }}>
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
                 <div className="flex flex-col items-center md:items-start text-center md:text-left">
-                    <h2 className="text-xl font-display font-bold text-white mb-2">MJIMS<span className="text-primary">.</span></h2>
+                    <h2 className="text-xl font-display font-bold text-foreground mb-2">MJIMS<span className="text-primary">.</span></h2>
                     <p className="text-secondary text-sm max-w-xs">
-                        Building premium digital experiences with a focus on high performance and exceptional design.
+                        Création d'expériences numériques premium axées sur la performance et le design d'exception.
                     </p>
                 </div>
 
@@ -22,7 +22,7 @@ export default function Footer() {
                 </div>
 
                 <p className="text-secondary text-xs">
-                    © {new Date().getFullYear()} MJIMS. All rights reserved.
+                    © {new Date().getFullYear()} MJIMS. Tous droits réservés.
                 </p>
             </div>
         </footer>
