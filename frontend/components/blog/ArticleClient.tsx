@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowLeft, Calendar } from 'lucide-react';
@@ -19,6 +19,8 @@ interface Post {
 
 export default function ArticleClient({ post }: { post: Post }) {
     const [otherPosts, setOtherPosts] = useState<Post[]>([]);
+    const [isSidebarSticky, setIsSidebarSticky] = useState(false);
+    const otherArticlesRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const fetchOtherPosts = async () => {
@@ -32,6 +34,27 @@ export default function ArticleClient({ post }: { post: Post }) {
         };
         fetchOtherPosts();
     }, [post.id]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (!otherArticlesRef.current) return;
+
+            const otherArticlesRect = otherArticlesRef.current.getBoundingClientRect();
+
+            // La CTA devient sticky quand "Autres articles" sort complètement de l'écran par le haut
+            // Et redevient normale quand "Autres articles" revient dans l'écran
+            if (otherArticlesRect.bottom < 80) {
+                setIsSidebarSticky(true);
+            } else {
+                setIsSidebarSticky(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        handleScroll();
+
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     return (
         <main className="min-h-screen bg-[#ebebeb] font-sans font-[eurostile]">
@@ -89,10 +112,10 @@ export default function ArticleClient({ post }: { post: Post }) {
 
                     {/* Sidebar */}
                     <aside className="lg:w-[420px] space-y-8 flex flex-col">
-                        <BlogSidebar />
+                        <BlogSidebar enableSticky={true} isSticky={isSidebarSticky} />
 
                         {/* Autres Articles Section */}
-                        <div className="rounded-[3px] p-6 shadow-sm border border-[3px] border-[#316bf2] relative">
+                        <div ref={otherArticlesRef} className="rounded-[3px] p-6 shadow-sm border border-[3px] border-[#316bf2] relative">
                             <div className="absolute -top-3 left-6 bg-[#ebebeb] px-3">
                                 <h3 className="text-secondary font-bold flex items-center justify-between">
                                     Autres articles

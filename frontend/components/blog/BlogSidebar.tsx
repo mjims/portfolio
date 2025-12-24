@@ -3,11 +3,19 @@
 import { Info } from 'lucide-react';
 import Link from 'next/link';
 
-export default function BlogSidebar() {
+interface BlogSidebarProps {
+    enableSticky?: boolean;
+    isSticky?: boolean;
+}
+
+export default function BlogSidebar({ enableSticky = false, isSticky = false }: BlogSidebarProps) {
     return (
         <aside className="lg:w-[380px] space-y-12 shrink-0 font-sans font-[eurostile]">
             {/* CTA Card */}
-            <div className="bg-[#316bf2] rounded-2xl overflow-hidden p-1 text-center">
+            <div
+                className={`bg-[#316bf2] rounded-2xl overflow-hidden p-1 text-center transition-all duration-300 ${enableSticky && isSticky ? 'fixed top-24 right-8 lg:w-[380px] z-40' : ''
+                    }`}
+            >
                 <div className="p-2 flex flex-col items-center justify-center">
                     <div className="mb-8 w-full max-h-[200px] overflow-hidden">
                         <img
@@ -18,7 +26,7 @@ export default function BlogSidebar() {
                     </div>
                     <p className="text-white text-base font-medium leading-relaxed mb-8 px-4 text-left">
                         <strong>Besoin d'un développeur, un travail rapide, optimisé et personnalisé à votre goût sans tracasserie ? <br />
-                        Vous êtes au bon endroit</strong>
+                            Vous êtes au bon endroit</strong>
                     </p>
                     <Link href="/#contact">
                         <button className="bg-[#198754] hover:bg-[#059669] text-white px-10 py-3 rounded-md font-bold transition-all uppercase tracking-wide text-sm">
