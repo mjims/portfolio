@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000', 'http://localhost:3001'],
+    'allowed_origins' => ['http://localhost:3000', 'http://localhost:3001', 'https://mjimsdenla.online', 'https://www.mjimsdenla.online', 'https://office.mjimsdenla.online', 'https://www.office.mjimsdenla.online'],
 
     'allowed_origins_patterns' => [],
 
