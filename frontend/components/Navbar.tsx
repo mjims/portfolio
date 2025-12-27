@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Menu, X } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 const navItems = [
     { name: 'Accueil', id: 'home', href: '/#home' },
