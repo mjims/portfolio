@@ -117,7 +117,7 @@ export default function Projects() {
                             >
                                 <div className="relative aspect-[16/10] overflow-hidden">
                                     <img
-                                        src={project.image.startsWith('http') ? project.image : `http://localhost:8000${project.image}`}
+                                        src={project.image && project.image}
                                         alt={project.title}
                                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                     />

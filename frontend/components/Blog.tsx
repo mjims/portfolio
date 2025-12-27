@@ -64,7 +64,7 @@ export default function Blog() {
                         >
                             <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-6 border border-border bg-white shadow-sm transition-shadow group-hover:shadow-md">
                                 <img
-                                    src={post.image.startsWith('http') ? post.image : `http://localhost:8000${post.image}`}
+                                    src={post.image}
                                     alt={post.title}
                                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                 />
