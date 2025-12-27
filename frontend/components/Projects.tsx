@@ -10,7 +10,7 @@ interface Project {
     title: string;
     description: string;
     image: string;
-    demo_url?: string;
+    url?: string;
     github_url?: string;
     languages?: string;
 }
@@ -92,7 +92,7 @@ export default function Projects() {
                 <div className="mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">Mes Réalisations<span className="text-primary">.</span></h2>
                     <p className="text-secondary max-w-lg">
-                        Un aperçu des projets les plus stimulants et impactants que j'ai réalisés avec passion.
+                        Un aperçu des projets récents que j'ai réalisés avec passion.
                     </p>
                 </div>
 
@@ -140,8 +140,8 @@ export default function Projects() {
                                     </div>
 
                                     <div className="flex items-center gap-6 pt-4 border-t border-border/50">
-                                        {project.demo_url && (
-                                            <a href={project.demo_url} target="_blank" className="flex items-center gap-2 text-xs font-bold text-primary hover:opacity-70 transition-opacity">
+                                        {project.url && (
+                                            <a href={project.url} target="_blank" className="flex items-center gap-2 text-xs font-bold text-primary hover:opacity-70 transition-opacity">
                                                 <ExternalLink size={14} />
                                                 Démo
                                             </a>
