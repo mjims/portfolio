@@ -23,37 +23,33 @@ export default function Navbar() {
 
     useEffect(() => {
         const handleScroll = () => {
+            // Update scrolled state for navbar styling
             setScrolled(window.scrollY > 20);
-        };
 
-        const observerOptions = {
-            root: null,
-            rootMargin: '-50% 0px -50% 0px',
-            threshold: 0
-        };
+            // Handle active section detection
+            if (pathname !== '/') return;
 
-        const observerCallback = (entries: IntersectionObserverEntry[]) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    setActiveSection(entry.target.id);
+            const sections = ['home', 'skills', 'projects', 'blog', 'contact'];
+            const scrollPosition = window.scrollY + 150; // Offset for detection
+
+            for (const sectionId of sections) {
+                const element = document.getElementById(sectionId);
+                if (element) {
+                    const { offsetTop, offsetHeight } = element;
+                    if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+                        setActiveSection(sectionId);
+                        break;
+                    }
                 }
-            });
+            }
         };
-
-        const observer = new IntersectionObserver(observerCallback, observerOptions);
-        const sections = ['home', 'skills', 'projects', 'blog', 'contact'];
-        sections.forEach((section) => {
-            const el = document.getElementById(section);
-            if (el) observer.observe(el);
-        });
 
         window.addEventListener('scroll', handleScroll);
+        // Run once on mount to set initial state
+        handleScroll();
+
         return () => {
             window.removeEventListener('scroll', handleScroll);
-            sections.forEach((section) => {
-                const el = document.getElementById(section);
-                if (el) observer.unobserve(el);
-            });
         };
     }, [pathname]);
 
@@ -86,8 +82,8 @@ export default function Navbar() {
                             key={item.href}
                             onClick={() => handleNavClick(item.id, item.href)}
                             className={`px-6 py-2 rounded-full transition-all duration-300 ${(pathname === '/' && activeSection === item.id) || (pathname === item.href)
-                                    ? 'bg-primary text-white shadow-md shadow-primary/20'
-                                    : 'text-secondary hover:text-foreground hover:bg-black/5'
+                                ? 'bg-primary text-white shadow-md shadow-primary/20'
+                                : 'text-secondary hover:text-foreground hover:bg-black/5'
                                 }`}
                         >
                             {item.name}
@@ -129,8 +125,8 @@ export default function Navbar() {
                                     key={item.href}
                                     onClick={() => handleNavClick(item.id, item.href)}
                                     className={`text-left text-lg font-bold py-2 ${(pathname === '/' && activeSection === item.id) || (pathname === item.href)
-                                            ? 'text-primary'
-                                            : 'text-foreground'
+                                        ? 'text-primary'
+                                        : 'text-foreground'
                                         }`}
                                 >
                                     {item.name}

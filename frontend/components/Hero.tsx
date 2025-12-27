@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react';
 
 export default function Hero() {
     return (
-        <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-white" style={{ boxShadow: '0px 0px 16px 16px #fff' }}>
+        <section id="home" className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-white" style={{ boxShadow: '0px 0px 16px 16px #fff' }}>
             {/* Background Decorative Elements */}
             <div className="absolute top-1/4 -left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl opacity-60" />
             <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-accent/10 rounded-full blur-3xl opacity-60" />

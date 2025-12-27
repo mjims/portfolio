@@ -37,18 +37,17 @@ export default function BlogPage() {
     return (
         <main className="min-h-screen bg-[#f3f4f6]">
             {/* Hero Section */}
-            <section className="relative h-[300px] w-full mt-20 overflow-hidden bg-white border-y border-gray-200">
-                <div className="max-w-7xl mx-auto h-full flex flex-col md:flex-row items-center">
+            <section className="relative h-[200px] md:h-[300px] w-full mt-20 overflow-hidden bg-white border-y border-gray-200">
+                <div className=" mx-auto h-full flex flex-col md:flex-row items-center bg-[url('/images/banner.png')] bg-cover bg-position-center bg-no-repeat">
                     {/* Left: Aesthetic Image (Notebook/Phone part) */}
-                    <div className="hidden md:block w-1/2 h-full relative">
+                    {/* <div className="hidden md:block w-1/2 h-full relative">
                         <img
-                            src="/images/blog_hero.png"
+                            src="/images/banner.png"
                             alt="Workspace"
                             className="absolute -left-20 inset-y-0 h-full w-[120%] object-cover opacity-80"
                         />
                     </div>
 
-                    {/* Right: Info */}
                     <div className="w-full md:w-1/2 flex flex-col items-center md:items-end md:pr-12 text-center md:text-right py-8">
                         <h1 className="text-4xl md:text-6xl font-serif font-bold text-[#5a544b] mb-4">Edouard Denla</h1>
                         <div className="bg-[#bda995] text-white px-8 py-1.5 rounded-full text-sm font-bold mb-8 shadow-sm">
@@ -68,7 +67,7 @@ export default function BlogPage() {
                                 </div>
                             </a>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 {/* Visual dots decoration from image */}
                 <div className="absolute right-4 top-8 flex flex-col gap-2 opacity-20">
